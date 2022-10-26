@@ -1,0 +1,26 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#dir-path  {
+  width: 500px;
+  height: 30px;
+}
+
+.pkg-info {
+  margin-top: 10px;
+}
+
+.pkg-container {
+  margin-bottom: 10px;  
+}
+
+.result {
+  margin-bottom: 20px;
+  margin-top: 20px;
+}

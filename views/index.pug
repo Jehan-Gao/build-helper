@@ -1,0 +1,39 @@
+extends layout
+
+//- block content
+//-   h1= title
+//-   p Welcome to #{title}
+
+block content
+  div
+    span 输入操作的模块所在路径 
+    input(type='text', id='dir-path', value='/Users/jehan/beem/beem-module-test')
+  br/
+  
+  div 修改 npm 包版本
+    div
+      span 分支名：
+      input(type='text' id='branch-name', value='feat/test')
+
+    div(class='pkg-info')
+      div(class='pkg-container')
+        div(class='pkg-name-content')
+          span npm 包名：
+          input(type='text' class='pkg-name' value='@rongcloud/engine')
+          button(id='add-btn') +
+        div(class='pkg-version-content')
+          span npm 版本：
+          input(type='text' class='pkg-version' value='0.0.1')  
+
+    br/ 
+    br/ 
+    button(id='pkg-change') 修改
+
+    br/
+    div(class='result') yarn install result: 
+    div(id='installOutput') #{pullRes}
+    br/
+    div(class='result') push origin result:
+    div(id='pushOutput') 
+
+  
