@@ -9,6 +9,10 @@ const logger = require('koa-logger')
 const index = require('./routes/index')
 const users = require('./routes/users')
 
+const { createWebSocket } = require('./websocket')
+
+createWebSocket().listen(8001)
+
 // error handler
 onerror(app)
 

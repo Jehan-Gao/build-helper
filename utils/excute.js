@@ -3,7 +3,6 @@ const fs = require("fs")
 // const exec = require('child_process').exec
 const { execSync, exec } = require("child_process")
 
-
 const resolvePath = (inputPath) => {
   return path.resolve(inputPath)
 }
@@ -69,11 +68,12 @@ async function excuteNpmPkgChange(data) {
         pkgJSONObj.devDependencies[pkgInfo.pkgName] = pkgInfo.pkgVersion
       })
       fs.writeFileSync(pkgJSONPath, JSON.stringify(pkgJSONObj, null, "\t"))
-      return true
+      const newResult = fs.readFileSync(pkgJSONPath, 'utf-8')
+      return newResult
     }
   } catch (error) {
     console.log('excuteNpmPkgChange error ->', error)
-    return false
+    return error
   }
 }
 

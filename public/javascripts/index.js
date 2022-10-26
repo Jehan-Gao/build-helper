@@ -6,10 +6,48 @@ window.onload = function () {
   const pushOutputEle = document.getElementById("pushOutput")
 
   const addBtnEle = document.getElementById("add-btn")
+  const resultContainerEle = document.querySelector('.result-container')
 
+
+
+  let connectStatus = 0
+  
   handlePkgChange()
-
   copyEle()
+  const ws = createWebSocket()
+
+  function createWebSocket () {
+    const ws = new WebSocket('ws://localhost:8001')
+    ws.onopen = function (e) {
+      console.log(e, 'onopen')
+      connectStatus = 1
+    }
+
+    ws.onmessage = function (e) {
+      console.log('data===', e.data)
+      const data = JSON.parse(e.data)
+      renderExcuteResult(data)
+    }
+    return ws
+  }
+
+  function sendDataByWS (data) {
+    if (connectStatus !== 1) return 
+    ws.send(JSON.stringify(data))
+  }
+
+  function renderExcuteResult (res) {
+    const { type, data } = res
+    const typeEle = document.createElement('div')
+    typeEle.className = 'type'
+    typeEle.innerHTML = `${type}: `
+    resultContainerEle.appendChild(typeEle)
+    const resultEle = document.createElement('div')
+    resultEle.className = 'result'
+    resultEle.innerHTML = data
+    resultContainerEle.appendChild(resultEle)
+  }
+
 
   function copyEle() {
     addBtnEle.onclick = function () {
@@ -53,8 +91,8 @@ window.onload = function () {
 
 
   function handlePkgChange() {
-    installOutputEle.innerHTML = ''
-    pushOutputEle.innerHTML = ''
+    // installOutputEle.innerHTML = ''
+    // pushOutputEle.innerHTML = ''
 
     pkgChangeButton.onclick = async function () {
       // const pkgInfoList = []
@@ -74,29 +112,29 @@ window.onload = function () {
         }
       })
       console.log(pkgInfoList)
+      sendDataByWS({ pkgInfoList, dirPath, branchName })
 
-      installOutputEle.innerHTML = 'waiting ...'
-      pushOutputEle.innerHTML = 'waiting ...'
-      
+      // installOutputEle.innerHTML = 'waiting ...'
+      // pushOutputEle.innerHTML = 'waiting ...'
       // 发送请求，node 去修改
-      const res = await request({
-        url: "/change",
-        method: "POST",
-        data: {
-          pkgInfoList,
-          dirPath,
-          branchName,
-        },
-      })
-      console.log('res->', res)
-      const { code, installOutput, pushOutput, msg } = res
-      if (code === 0) {
-        installOutputEle.innerHTML = installOutput.replace(/\n/g, '<br/>')
-        pushOutputEle.innerHTML = pushOutput.replace(/\n/g, '<br/>')
-      } else {
-        installOutputEle.innerHTML = `<font color='red'>${msg.replace(/\n/g, '<br/>')}</font>`
-        pushOutputEle.innerHTML = `<font color='red'>${msg.replace(/\n/g, '<br/>')}</font>`
-      }
+    //   const res = await request({
+    //     url: "/change",
+    //     method: "POST",
+    //     data: {
+    //       pkgInfoList,
+    //       dirPath,
+    //       branchName,
+    //     },
+    //   })
+    //   console.log('res->', res)
+    //   const { code, installOutput, pushOutput, msg } = res
+    //   if (code === 0) {
+    //     installOutputEle.innerHTML = installOutput.replace(/\n/g, '<br/>')
+    //     pushOutputEle.innerHTML = pushOutput.replace(/\n/g, '<br/>')
+    //   } else {
+    //     installOutputEle.innerHTML = `<font color='red'>${msg.replace(/\n/g, '<br/>')}</font>`
+    //     pushOutputEle.innerHTML = `<font color='red'>${msg.replace(/\n/g, '<br/>')}</font>`
+    //   }
     }
   }
 
