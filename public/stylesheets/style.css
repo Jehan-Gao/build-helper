@@ -4,12 +4,26 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
 }
 
-#dir-path  {
+#dir-path {
   width: 500px;
-  height: 30px;
+  /* height: 30px; */
+}
+
+input {
+  height: 20px;
+}
+
+.step-content {
+  margin-bottom: 20px;
+}
+
+.step {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
 }
 
 .pkg-info {
@@ -17,10 +31,71 @@ a {
 }
 
 .pkg-container {
-  margin-bottom: 10px;  
+  /* margin-bottom: 10px; */
+  margin: 20px 0 20px 20px;
+}
+.pkg-name-content {
+  margin-bottom: 5px;
+}
+
+.btn {
+  background-color: #409eff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #409eff;
+  outline: none;
+  border-radius: 4px;
+  color: #fff;
+  border: 1px solid #dcdfe6;
+}
+
+#add-btn {
+  width: 45px;
+  height: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  margin-left: 10px;
+}
+
+#pkg-change {
+  width: 80px;
+  height: 35px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+}
+
+.main-content {
+  margin-top: 40px;
 }
 
 .type {
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+.result-wrapper {
+  margin-top: 30px;
+}
+
+.result-wrapper .title {
+  font-size: 16px;
+}
+
+.result-container {
+  margin-top: 10px;
+  width: 800px;
+  min-height: 500px;
+  background-color: #000;
+  color: #fff;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.result-container .type {
+  background-color: yellow;
+  color: #000;
+  max-width: 200px;
 }

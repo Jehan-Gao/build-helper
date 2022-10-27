@@ -1,39 +1,42 @@
 extends layout
 
-//- block content
-//-   h1= title
-//-   p Welcome to #{title}
-
 block content
-  div
-    span 输入操作的模块所在路径 
-    input(type='text', id='dir-path', value='/Users/jehan/beem/beem-module-test')
-  br/
-  
-  div 修改 npm 包版本
-    div
-      span 分支名：
-      input(type='text' id='branch-name', value='feat/test')
+  div.remind
+    h1 Build Helper For Beem
+    ul 前置条件 (仔细阅读)
+      li 1. 本地已经 clone 项目，且有 developer 权限
+      li 2. 目标项目可以通过 ssh 执行 git pull/ git push 操作
+      li 3. node 版本 v18.0.0 以下 
+
+  // @TODO: jenkins 构建链接
+  //- div     
+
+  div(class='main-content')
+    div(class='step-content')
+      span(class='step') 1. 输入目标项目所在路径：
+      input(type='text', id='dir-path' class='input', value='')
+    div(class='step-content')
+      span(class='step') 2. 填写操作的分支名：
+      input(type='text' id='branch-name' class='input' value='')
 
     div(class='pkg-info')
-      div(class='pkg-container')
-        div(class='pkg-name-content')
-          span npm 包名：
-          input(type='text' class='pkg-name' value='@rongcloud/engine')
-          button(id='add-btn') +
-        div(class='pkg-version-content')
-          span npm 版本：
-          input(type='text' class='pkg-version' value='0.0.1')  
+      div(class='step-content')
+        span(class='step') 3. 填写要修改的 npm 包的名称和版本号：
+        div(class='pkg-container')
+          div(class='pkg-name-content')
+            span npm 包名：
+            input(type='text' class='pkg-name' class='input' value='')
+            button(id='add-btn' class='btn') +
+          div(class='pkg-version-content')
+            span npm 版本：
+            input(type='text' class='pkg-version' class='input' value='')  
+    div(class='step-content')
+      span(class='step') 4. 执行修改操作： 
+      button(id='pkg-change' class='btn') 修改
 
-    br/ 
-    br/ 
-    button(id='pkg-change') 修改
-
-    br/
-    div(class='result-container')
-    //- div(class='type') yarn install result: 
-    //- div(id='installOutput') #{pullRes}
-    br/
+    div(class='result-wrapper')
+      div(class='title') 执行结果：
+      div(class='result-container')
     
 
   

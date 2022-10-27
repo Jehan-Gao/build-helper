@@ -1,28 +1,42 @@
-const ws = require('nodejs-websocket')
+const ws = require("nodejs-websocket")
 
-const { excuteCheckoutBranch ,excutePullBranch, excuteNpmPkgChange,
-excuteInstall, excutePushOrigin } = require('./utils/excute')
+const {
+  excuteCheckoutBranch,
+  excutePullBranch,
+  excuteNpmPkgChange,
+  excuteInstall,
+  excutePushOrigin,
+} = require("./utils/excute")
 
-const msgType = require('./utils/msgType')
+const msgType = require("./utils/msgType")
 
-function createTaskQueue () {
-  const taskQueue = [ { type: msgType.checkoutBranch, fn: excuteCheckoutBranch}, { type: msgType.pullBranch, fn: excutePullBranch },
-    { type: msgType.changePkgJSON, fn: excuteNpmPkgChange }, { type: msgType.yarnInstall, fn: excuteInstall },
-    { type: msgType.pushBranch,  fn: excutePushOrigin } ]
-    return taskQueue
+function createTaskQueue() {
+  const taskQueue = [
+    { type: msgType.checkoutBranch, fn: excuteCheckoutBranch },
+    { type: msgType.pullBranch, fn: excutePullBranch },
+    { type: msgType.changePkgJSON, fn: excuteNpmPkgChange },
+    { type: msgType.yarnInstall, fn: excuteInstall },
+    { type: msgType.pushBranch, fn: excutePushOrigin },
+  ]
+  return taskQueue
 }
 
-
-function createWebSocket () {
+function createWebSocket() {
   const server = ws.createServer(function (conn) {
     conn.on("text", async function (string) {
-        console.log("Received " + string)
-        const data = JSON.parse(string)
-        const taskQueue = createTaskQueue()
-        excuteNextTask(taskQueue, conn, data)
+      console.log("Received " + string)
+      const data = JSON.parse(string)
+      const taskQueue = createTaskQueue()
+      excuteNextTask(taskQueue, conn, data)
     })
     conn.on("close", function (code, reason) {
-        console.log("Connection closed")
+      console.log("Connection closed")
+      server.close(() => {
+        createWebSocket().listen(8001)
+      })
+    })
+    conn.on("error", function (err) {
+      console.log(err, "error")
     })
   })
   return server
@@ -32,16 +46,20 @@ function send2Client(conn, data, type) {
   conn.send(JSON.stringify({ type, data }))
 }
 
-async function excuteNextTask (taskQueue, conn, data) {
+async function excuteNextTask(taskQueue, conn, data) {
   if (!taskQueue.length) return
   const task = taskQueue.shift()
-  const res = await task.fn(data)
-  send2Client(conn, res, task.type)
-  excuteNextTask(taskQueue, conn, data)
+  try {
+    const res = await task.fn(data)
+    send2Client(conn, res, task.type)
+    excuteNextTask(taskQueue, conn, data)
+  } catch (error) {
+    send2Client(conn, error.toString(), task.type)
+  } finally {
+  }
 }
-
 
 module.exports = {
   createWebSocket,
-  send2Client
+  send2Client,
 }
