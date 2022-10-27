@@ -7,10 +7,11 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 
 const index = require('./routes/index')
-const users = require('./routes/users')
 
 const { createWebSocket } = require('./websocket')
 
+
+// 创建 websocket
 createWebSocket().listen(8001)
 
 // error handler
@@ -38,7 +39,6 @@ app.use(async (ctx, next) => {
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
