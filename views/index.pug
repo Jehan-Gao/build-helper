@@ -13,8 +13,12 @@ block content
 
   div(class='main-content')
     div(class='step-content')
-      span(class='step') 1. 输入目标项目所在路径：
-      input(type='text', id='dir-path' class='input', value='/Users/jehan/beem/beem-meeting')
+      span(class='step') 1. 选择修改的项目名称：
+      //- input(type='text', id='dir-path' class='input', value='/Users/jehan/beem/beem-meeting')
+      select(id='project')
+        option(value="1") beem-meeting
+        option(value="2") beem-call
+        option(value="3") beem-build
     div(class='step-content')
       span(class='step') 2. 填写操作的分支名：
       input(type='text' id='branch-name' class='input' value='')

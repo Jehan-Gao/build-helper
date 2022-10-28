@@ -2,13 +2,23 @@ window.onload = function () {
   const pkgChangeButton = document.getElementById("pkg-change")
   const addBtnEle = document.getElementById("add-btn")
   const resultContainerEle = document.querySelector(".result-container")
-
-  let connectStatus = 0
-
-  handlePkgChange()
-  copyEle()
+  const projectSelectEle = document.getElementById('project')
+  const projectMap = {
+    1: 'beem-meeting',
+    2: 'beem-call',
+    3: 'beem-build'
+  }
 
   let ws = createWebSocket()
+
+  let projectName = projectMap[projectSelectEle.value || '1']
+  let connectStatus = 0
+
+  projectSelectEle.onchange = function(e) {
+    console.log('select project ->', e.target.value)
+    projectName = projectMap[e.target.value || '1']
+    console.log(projectName, 'projectName')
+  }
 
   ws.onerror = function (err) {
     console.log('onerror ->', err)
@@ -51,6 +61,7 @@ window.onload = function () {
     resultContainerEle.appendChild(resultEle)
   }
 
+  copyEle()
   function copyEle() {
     addBtnEle.onclick = function () {
       const pkgInfoEle = document.querySelector(".pkg-info")
@@ -96,12 +107,13 @@ window.onload = function () {
     resultContainerEle.innerHTML = ""
   }
 
+  handlePkgChange()
   function handlePkgChange() {
     pkgChangeButton.onclick = async function () {
       clearResultContent()
 
       // 模块所在路径
-      const dirPath = document.getElementById("dir-path").value || ""
+      // const dirPath = document.getElementById("dir-path").value || ""
       // 分支名
       const branchName = document.getElementById("branch-name").value || ""
 
@@ -115,7 +127,11 @@ window.onload = function () {
         }
       })
       console.log("pkgInfoList ->", pkgInfoList)
-      send2Server({ pkgInfoList, dirPath, branchName })
+      if (!projectName || !branchName || !pkgInfoList.length) {
+        alert('请完善构建信息')
+        return
+      }
+      send2Server({ pkgInfoList, projectName, branchName })
     }
   }
 }
